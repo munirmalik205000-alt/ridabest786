@@ -59,13 +59,13 @@ const Login = () => {
             <Lightning size={28} weight="fill" className="text-white sm:size-8" />
           </div>
           <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
-            SMARTPAY360<span className="text-brand-gradient"></span>
+            SMART<span className="text-brand-gradient">PAY360</span>
           </h1>
           <p className="text-muted-foreground text-xs sm:text-sm mt-1">Recharge · Bills · Wallet · Invest</p>
         </div>
 
         <div className="surface-glass rounded-3xl p-5 sm:p-8 shadow-xl" data-testid="login-card">
-          <h2 className="text-xl sm:text-2xl font-bold"</h2>Welcome back</h2>
+          <h2 className="text-xl sm:text-2xl font-bold"<Welcome back</h2>
           <p className="text-muted-foreground text-sm mt-1">Log in to manage your money</p>
 
           <form onSubmit={handleSubmit} className="mt-5 sm:mt-6 space-y-4">
