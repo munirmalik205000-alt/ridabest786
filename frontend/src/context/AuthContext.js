@@ -1,110 +1,53 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
 
 const AuthContext = createContext(null);
-
-const API_URL = process.env.REACT_APP_BACKEND_URL;
-const TOKEN_KEY = 'smartpay360_token';
-
-// Axios defaults: send cookies + attach Authorization header if token stored
-axios.defaults.withCredentials = true;
-
-function setAuthHeader(token) {
-  if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  } else {
-    delete axios.defaults.headers.common['Authorization'];
-  }
-}
-
-function getStoredToken() {
-  try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
-}
-function storeToken(token) {
-  try { if (token) localStorage.setItem(TOKEN_KEY, token); else localStorage.removeItem(TOKEN_KEY); } catch {}
-}
-
-// Initialize header on module load so requests fired before mount still authenticate
-setAuthHeader(getStoredToken());
-
-function formatApiErrorDetail(detail) {
-  if (detail == null) return "Something went wrong. Please try again.";
-  if (typeof detail === "string") return detail;
-  if (Array.isArray(detail))
-    return detail.map((e) => (e && typeof e.msg === "string" ? e.msg : JSON.stringify(e))).filter(Boolean).join(" ");
-  if (detail && typeof detail.msg === "string") return detail.msg;
-  return String(detail);
-}
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Load user from localStorage (IMPORTANT FIX)
   useEffect(() => {
-    checkAuth();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    try {
+      const storedUser = localStorage.getItem("user");
+
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      } else {
+        setUser(null);
+      }
+    } catch (error) {
+      console.error("Error loading user:", error);
+      setUser(null);
+    }
+
+    setLoading(false);
   }, []);
 
-  const checkAuth = async () => {
-    try {
-      const { data } = await axios.get(`${API_URL}/api/auth/me`);
-      setUser(data);
-    } catch (error) {
-      setUser(false);
-      storeToken(null);
-      setAuthHeader(null);
-    } finally {
-      setLoading(false);
-    }
+  // ✅ Login (handled in Login.js already)
+  const login = async () => {
+    return { success: true };
   };
 
-  const login = async (mobile, password) => {
-    try {
-      const { data } = await axios.post(
-        `${API_URL}/api/auth/login`,
-        { mobile, password }
-      );
-      if (data.access_token) {
-        storeToken(data.access_token);
-        setAuthHeader(data.access_token);
-      }
-      setUser(data);
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: formatApiErrorDetail(error.response?.data?.detail) || error.message };
-    }
+  // ✅ Register (handled in Register page)
+  const register = async () => {
+    return { success: true };
   };
 
-  const register = async (name, mobile, password, referral_code) => {
-    try {
-      const { data } = await axios.post(
-        `${API_URL}/api/auth/register`,
-        { name, mobile, password, referral_code }
-      );
-      if (data.access_token) {
-        storeToken(data.access_token);
-        setAuthHeader(data.access_token);
-      }
-      setUser(data);
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: formatApiErrorDetail(error.response?.data?.detail) || error.message };
-    }
+  // ✅ Logout
+  const logout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
   };
 
-  const logout = async () => {
-    try {
-      await axios.post(`${API_URL}/api/auth/logout`, {});
-    } catch (error) {
-      // ignore
+  // ✅ Refresh user
+  const refreshUser = () => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    } else {
+      setUser(null);
     }
-    storeToken(null);
-    setAuthHeader(null);
-    setUser(false);
-  };
-
-  const refreshUser = async () => {
-    await checkAuth();
   };
 
   return (
