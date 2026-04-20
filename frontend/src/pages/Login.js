@@ -61,7 +61,7 @@ const Login = () => {
           <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
             SMART<span className="text-brand-gradient">PAY360</span>
           </h1>
-          <p className="text-muted-foreground text-xs sm:text-sm mt-1">Recharge · Bills · Wallet · Invest</p>
+          <p className="text-muted-foreground text-xs sm:text-sm mt-1">Recharge · Bills · Cashback · Earing </p>
         </div>
 
         <div className="surface-glass rounded-3xl p-5 sm:p-8 shadow-xl" data-testid="login-card">
