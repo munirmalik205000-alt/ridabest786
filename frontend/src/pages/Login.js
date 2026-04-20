@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -14,7 +15,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleMobileChange = (e) => {
