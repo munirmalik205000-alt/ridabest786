@@ -82,7 +82,7 @@ const Login = () => {
           <div className="w-16 h-16 rounded-2xl bg-brand-gradient flex items-center justify-center shadow-lg mb-3">
             <Lightning size={28} className="text-white" />
           </div>
-          <h1 className="text-2xl font-bold">Rida786</h1>
+          <h1 className="text-2xl font-bold">SMARTPAY360</h1>
         </div>
 
         <div className="surface-glass rounded-3xl p-6 shadow-xl">
