@@ -1,4 +1,7 @@
-
+<Route path="/dashboard" element={<ProtectedRoute><DashboardV2 /></ProtectedRoute>} />
+<Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+<Route path="/wallet" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
+<Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
