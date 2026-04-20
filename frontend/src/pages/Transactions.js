@@ -18,10 +18,10 @@ const Transactions = () => {
   const [toDate, setToDate] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // ✅ FIX: Auto fetch on filter change
-  useEffect(() => {
-    fetchTransactions();
-  }, [filterType, fromDate, toDate]);
+  // eslint-disable-next-line
+useEffect(() => {
+  fetchTransactions();
+}, [filterType, fromDate, toDate]);
 
   const fetchTransactions = async () => {
     setLoading(true);
