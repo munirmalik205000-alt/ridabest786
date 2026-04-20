@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
@@ -19,7 +20,6 @@ import AdminPanel from './pages/AdminPanel';
 import Packages from './pages/Packages';
 import Withdrawals from './pages/Withdrawals';
 
-import ProtectedRoute from './components/ProtectedRoute';
 import BottomNav from './components/BottomNav';
 
 import './App.css';
@@ -27,9 +27,8 @@ import './App.css';
 const hideNavPaths = ['/login', '/register', '/forgot-password', '/setup-pin', '/admin'];
 
 function AppLayout({ children }) {
-
-  // 🔥 SAFE USER (CRASH FIX)
   let user = null;
+
   try {
     user = JSON.parse(localStorage.getItem("user"));
   } catch {
@@ -61,35 +60,26 @@ function App() {
 
           <Routes>
 
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            {/* 🔥 Direct login show */}
+            <Route path="/" element={<Login />} />
 
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
 
-            <Route path="/setup-pin" element={<ProtectedRoute><SetupPIN /></ProtectedRoute>} />
-
-            <Route path="/dashboard" element={<ProtectedRoute><DashboardV2 /></ProtectedRoute>} />
-
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-
-            <Route path="/shopping" element={<ProtectedRoute><Shopping /></ProtectedRoute>} />
-
-            <Route path="/recharge" element={<ProtectedRoute><Recharge /></ProtectedRoute>} />
-
-            <Route path="/wallet" element={<ProtectedRoute><WalletPage /></ProtectedRoute>} />
-
-            <Route path="/add-fund" element={<ProtectedRoute><AddFund /></ProtectedRoute>} />
-
-            <Route path="/transactions" element={<ProtectedRoute><Transactions /></ProtectedRoute>} />
-
-            <Route path="/referrals" element={<ProtectedRoute><Referrals /></ProtectedRoute>} />
-
-            <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
-
-            <Route path="/packages" element={<ProtectedRoute><Packages /></ProtectedRoute>} />
-
-            <Route path="/withdrawals" element={<ProtectedRoute><Withdrawals /></ProtectedRoute>} />
+            {/* 🔥 TEMP: Removed ProtectedRoute */}
+            <Route path="/setup-pin" element={<SetupPIN />} />
+            <Route path="/dashboard" element={<DashboardV2 />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/shopping" element={<Shopping />} />
+            <Route path="/recharge" element={<Recharge />} />
+            <Route path="/wallet" element={<WalletPage />} />
+            <Route path="/add-fund" element={<AddFund />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/referrals" element={<Referrals />} />
+            <Route path="/admin" element={<AdminPanel />} />
+            <Route path="/packages" element={<Packages />} />
+            <Route path="/withdrawals" element={<Withdrawals />} />
 
           </Routes>
 
