@@ -20,8 +20,8 @@ const Transactions = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchTransactions();
-  }, [filterType, fromDate, toDate]);
+  fetchTransactions();
+}, [filterType, fromDate, toDate, fetchTransactions]);
 
   const fetchTransactions = async () => {
     setLoading(true);
