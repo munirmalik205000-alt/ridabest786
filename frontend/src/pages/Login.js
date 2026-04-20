@@ -86,7 +86,7 @@ const Login = () => {
         </div>
 
         <div className="surface-glass rounded-3xl p-6 shadow-xl">
-          <h2 className="text-xl font-bold">Welcome back 👋</h2>
+          <h2 className="text-xl font-bold">Welcome back </h2>
 
           <form onSubmit={handleSubmit} className="mt-5 space-y-4">
 
