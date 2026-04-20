@@ -16,6 +16,7 @@ User provided the `rida123-main.zip` codebase (existing FastAPI + React MLM/rech
 - [x] Added `/app/frontend/vercel.json` with SPA rewrites.
 - [x] Firebase Web SDK initialised at `/app/frontend/src/lib/firebase.js` (project: rida786) and imported from `index.js`. Backend exposes `/api/config/firebase` and ships `backend/firebase_config.py`.
 - [x] Profile PIN setup rewritten with `key={pinStep}` reset + strict validation → works end-to-end (verified via UI: "PIN created successfully!" toast).
+- [x] Fixed root-cause of "PIN set nhi ho raha" bug: `GET /api/auth/me` was computing `has_pin` AFTER `pin_hash` was stripped in `get_current_user()`; now computed before stripping so UI correctly flips to "PIN is already set" after setup.
 - [x] Utility Bill Payments module:
   - Backend: `GET /api/bills/categories`, `GET /api/bills/billers/{category}`, `POST /api/bills/pay` (PIN required), `GET /api/bills/history`.
   - 12 categories (Electricity, Water, Gas, Broadband, Landline, DTH, Insurance, LPG, Credit Card, FASTag, Education, Municipal) with 5–10 billers each.

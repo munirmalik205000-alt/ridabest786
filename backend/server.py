@@ -80,6 +80,7 @@ async def get_current_user(request: Request) -> dict:
         if not user:
             raise HTTPException(status_code=401, detail="User not found")
         user["_id"] = str(user["_id"])
+        user["has_pin"] = user.get("pin_hash") is not None
         user.pop("password_hash", None)
         user.pop("pin_hash", None)
         return user
@@ -347,7 +348,7 @@ async def get_me(request: Request):
         "mobile": user["mobile"],
         "role": user["role"],
         "referral_code": user.get("referral_code", ""),
-        "has_pin": user.get("pin_hash") is not None,
+        "has_pin": user.get("has_pin", False),
         "main_wallet": user.get("main_wallet", 0.0),
         "e_wallet": user.get("e_wallet", 0.0),
         "coins": user.get("coins", 0),
