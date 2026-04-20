@@ -21,7 +21,14 @@ const API_URL = process.env.REACT_APP_BACKEND_URL;
 const DashboardV2 = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [dashboardData, setDashboardData] = useState(null);
+ const [dashboardData, setDashboardData] = useState({
+  main_wallet: 0,
+  e_wallet: 0,
+  today_income: 0,
+  total_income: 0,
+  referral_income: 0,
+  coins: 0
+}); 
   const [packages, setPackages] = useState([]);
   const [myPackages, setMyPackages] = useState([]);
   const [bannerData, setBannerData] = useState(null);
@@ -106,7 +113,9 @@ const DashboardV2 = () => {
     );
   }
 
-  const totalBalance = dashboardData.main_wallet + dashboardData.e_wallet;
+  const totalBalance =
+  (dashboardData?.main_wallet || 0) +
+  (dashboardData?.e_wallet || 0);
 
   return (
     <div className="min-h-screen bg-background">
