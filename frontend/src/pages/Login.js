@@ -65,7 +65,7 @@ const Login = () => {
         </div>
 
         <div className="surface-glass rounded-3xl p-5 sm:p-8 shadow-xl" data-testid="login-card">
-          <h2 className="text-xl sm:text-2xl font-bold"<Welcome back</h2>
+          <h2 className="text-xl sm:text-2xl font-bold">Welcome back</h2>
           <p className="text-muted-foreground text-sm mt-1">Log in to manage your money</p>
 
           <form onSubmit={handleSubmit} className="mt-5 sm:mt-6 space-y-4">
