@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   RIDA – Tri-color (Blue • Purple • Green) theme
+   Light + Dark modes, with a single brand-gradient accent.
+   ============================================================ */
+@layer base {
+  :root {
+    /* Light mode – airy white with tri-color gradient accents */
+    --background: 220 33% 98%;
+    --foreground: 225 39% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 225 39% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 225 39% 12%;
+
+    /* Brand primary = deep indigo/blue (#4F46E5-ish) */
+    --primary: 243 75% 59%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary = emerald green */
+    --secondary: 158 64% 42%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Accent = purple */
+    --accent: 270 75% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 220 20% 95%;
+    --muted-foreground: 225 15% 42%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 22% 91%;
+    --input: 220 22% 91%;
+    --ring: 243 75% 59%;
+    --radius: 1rem;
+
+    /* Brand tokens used across the app */
+    --brand-blue: 243 75% 59%;
+    --brand-purple: 270 75% 60%;
+    --brand-green: 158 64% 42%;
+    --brand-gradient: linear-gradient(135deg,
+      hsl(243 85% 62%) 0%,
+      hsl(270 80% 62%) 50%,
+      hsl(158 64% 46%) 100%);
+    --brand-gradient-soft: linear-gradient(135deg,
+      hsl(243 95% 97%) 0%,
+      hsl(270 95% 97%) 50%,
+      hsl(158 70% 95%) 100%);
+
+    --surface-elevated: 0 0% 100%;
+    --chart-1: 243 75% 59%;
+    --chart-2: 270 75% 60%;
+    --chart-3: 158 64% 42%;
+    --chart-4: 217 91% 60%;
+    --chart-5: 43 96% 56%;
+  }
+
+  .dark {
+    /* Dark mode – midnight indigo backdrop with neon brand */
+    --background: 230 30% 6%;
+    --foreground: 220 20% 94%;
+
+    --card: 230 28% 10%;
+    --card-foreground: 220 20% 94%;
+
+    --popover: 230 28% 10%;
+    --popover-foreground: 220 20% 94%;
+
+    --primary: 243 90% 70%;
+    --primary-foreground: 230 30% 6%;
+
+    --secondary: 158 70% 52%;
+    --secondary-foreground: 230 30% 6%;
+
+    --accent: 270 85% 72%;
+    --accent-foreground: 230 30% 6%;
+
+    --muted: 230 20% 15%;
+    --muted-foreground: 220 15% 68%;
+
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 230 20% 18%;
+    --input: 230 20% 18%;
+    --ring: 243 90% 70%;
+
+    --brand-blue: 243 90% 70%;
+    --brand-purple: 270 85% 72%;
+    --brand-green: 158 70% 52%;
+    --brand-gradient: linear-gradient(135deg,
+      hsl(243 95% 72%) 0%,
+      hsl(270 90% 72%) 50%,
+      hsl(158 75% 55%) 100%);
+    --brand-gradient-soft: linear-gradient(135deg,
+      hsl(243 40% 18%) 0%,
+      hsl(270 40% 18%) 50%,
+      hsl(158 40% 16%) 100%);
+
+    --surface-elevated: 230 28% 12%;
+  }
+}
+
+@layer base {
+  * { @apply border-border; }
+
+  html, body {
+    @apply bg-background text-foreground;
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Sora', 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: -0.015em;
+  }
+
+  ::selection { background: hsl(270 85% 70% / 0.4); color: inherit; }
+}
+
+@layer components {
+  /* Brand gradient utilities */
+  .bg-brand-gradient        { background-image: var(--brand-gradient); }
+  .bg-brand-gradient-soft   { background-image: var(--brand-gradient-soft); }
+
+  .text-brand-gradient {
+    background-image: var(--brand-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .btn-brand {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl font-semibold text-white shadow-lg transition;
+    background-image: var(--brand-gradient);
+    box-shadow: 0 10px 24px -8px hsl(270 85% 60% / 0.45);
+  }
+  .btn-brand:hover  { filter: brightness(1.05); transform: translateY(-1px); }
+  .btn-brand:active { transform: translateY(0); filter: brightness(0.97); }
+
+  .card-brand {
+    @apply rounded-2xl bg-card text-card-foreground shadow-sm;
+    border: 1px solid hsl(var(--border));
+  }
+
+  .ring-brand {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+    --tw-ring-color: hsl(var(--ring));
+  }
+
+  /* Glass surface (nice for dark mode headers) */
+  .surface-glass {
+    background: hsl(var(--card) / 0.7);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid hsl(var(--border));
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Legacy emerald classes -> brand primary mapping (keeps old screens consistent) */
+  .text-emerald-600 { color: hsl(var(--primary)); }
+  .text-emerald-700 { color: hsl(var(--primary) / 0.9); }
+  .bg-emerald-50    { background-color: hsl(var(--primary) / 0.08); }
+  .bg-emerald-100   { background-color: hsl(var(--primary) / 0.12); }
+  .bg-emerald-600   { background-color: hsl(var(--primary)); }
+  .bg-emerald-700   { background-color: hsl(var(--primary) / 0.9); }
+  .hover\:bg-emerald-700:hover { background-color: hsl(var(--primary) / 0.9); }
+  .border-emerald-200 { border-color: hsl(var(--primary) / 0.25); }
+  .border-emerald-400 { border-color: hsl(var(--primary) / 0.55); }
+
+  .fade-slide-in {
+    animation: fadeSlideIn 0.4s ease-out both;
+  }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}

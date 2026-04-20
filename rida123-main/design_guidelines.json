@@ -1,0 +1,145 @@
+{
+  "theme": "Light",
+  "archetype": "Archetype 4 (Swiss & High-Contrast) modified for Finance",
+  "design_philosophy": "Trust through clarity. Financial apps and MLM systems require high legibility and an authoritative, secure visual tone. We use stark contrasts, generous padding, and clear color coding for financial states. The design is mobile-first, ensuring quick access to recharge functions and wallet balances.",
+  "colors": {
+    "background": "#f8fafc",
+    "surface": "#ffffff",
+    "primary": {
+      "DEFAULT": "#059669",
+      "foreground": "#ffffff",
+      "hover": "#047857"
+    },
+    "secondary": {
+      "DEFAULT": "#0f172a",
+      "foreground": "#ffffff",
+      "hover": "#1e293b"
+    },
+    "accent": {
+      "DEFAULT": "#3b82f6",
+      "foreground": "#ffffff"
+    },
+    "destructive": {
+      "DEFAULT": "#ef4444",
+      "foreground": "#ffffff"
+    },
+    "warning": {
+      "DEFAULT": "#f59e0b",
+      "foreground": "#ffffff"
+    },
+    "text": {
+      "main": "#0f172a",
+      "muted": "#64748b"
+    },
+    "border": "#e2e8f0",
+    "wallet": {
+      "main": {
+        "bg": "#0f172a",
+        "text": "#ffffff"
+      },
+      "ewallet": {
+        "bg": "#059669",
+        "text": "#ffffff"
+      },
+      "coin": {
+        "bg": "#fef3c7",
+        "text": "#d97706",
+        "border": "#fde68a"
+      }
+    }
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Outfit, sans-serif",
+      "body": "Manrope, sans-serif"
+    },
+    "sizes": {
+      "h1": "text-4xl md:text-5xl font-bold tracking-tight",
+      "h2": "text-2xl md:text-3xl font-bold tracking-tight",
+      "h3": "text-xl md:text-2xl font-semibold",
+      "h4": "text-lg font-semibold",
+      "body": "text-base text-slate-700 leading-relaxed",
+      "small": "text-sm text-slate-500",
+      "overline": "text-xs font-bold uppercase tracking-[0.2em] text-slate-500"
+    }
+  },
+  "spacing_and_layout": {
+    "philosophy": "Generous spacing. Containers with borders must use internal padding (p-6 or p-8).",
+    "grid_modes": {
+      "dashboard": "grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6",
+      "recharge_services": "grid-cols-3 md:grid-cols-4 gap-4"
+    },
+    "surfaces": {
+      "card": "bg-white rounded-2xl border border-slate-200 shadow-sm",
+      "glass": "bg-white/70 backdrop-blur-xl border-b border-white/20"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": "bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 transition-colors shadow-sm",
+      "secondary": "bg-slate-900 text-white rounded-xl font-medium hover:bg-slate-800 transition-colors",
+      "outline": "border-2 border-slate-200 bg-transparent text-slate-900 hover:border-slate-300 rounded-xl font-medium",
+      "ghost": "hover:bg-slate-100 text-slate-600 rounded-xl"
+    },
+    "inputs": {
+      "default": "border border-slate-300 rounded-xl px-4 py-3 bg-white focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all",
+      "pin": "text-center text-2xl tracking-widest font-bold"
+    },
+    "badges": {
+      "success": "bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full text-xs font-semibold",
+      "pending": "bg-amber-100 text-amber-800 px-2.5 py-0.5 rounded-full text-xs font-semibold",
+      "failed": "bg-red-100 text-red-800 px-2.5 py-0.5 rounded-full text-xs font-semibold"
+    },
+    "charts": "Use Recharts with Emerald (#059669) for income/growth."
+  },
+  "icons": {
+    "library": "@phosphor-icons/react",
+    "instructions": "Use Phosphor icons with `weight=\"duotone\"` for larger dashboard elements and `weight=\"regular\"` for dense lists."
+  },
+  "animations": {
+    "hover": "transform transition-transform duration-200 hover:-translate-y-1 hover:shadow-md",
+    "click": "active:scale-95",
+    "entrance": "framer-motion standard fade-in-up for cards"
+  },
+  "media": {
+    "images": [
+      {
+        "url": "https://images.unsplash.com/photo-1758611974022-ca3182694951?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxzZWN1cmUlMjBtb2JpbGUlMjBiYW5raW5nJTIwd2FsbGV0fGVufDB8fHx8MTc3NTY2NTQ5MXww&ixlib=rb-4.1.0&q=85",
+        "category": "auth_background",
+        "description": "Secure mobile banking background for login/signup"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1773883926157-2687f3209666?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxuZXR3b3JrJTIwbWFya2V0aW5nJTIwY29ubmVjdGlvbiUyMHBlb3BsZXxlbnwwfHx8fDE3NzU2NjU0OTJ8MA&ixlib=rb-4.1.0&q=85",
+        "category": "network_banner",
+        "description": "Background image for the Referral/Network section header"
+      }
+    ]
+  },
+  "specific_flows": {
+    "wallet_system": {
+      "layout": "Display Main Wallet and E-Wallet side by side on desktop, stacked on mobile. Use distinct colored cards (Dark Slate vs Emerald) to prevent confusion. Add quick action buttons (Add Fund, Transfer) directly below balances."
+    },
+    "recharge_services": {
+      "layout": "Bento grid of square icon buttons. When clicked, open a Shadcn Dialog or side sheet to enter details and select Wallet (E-Wallet or Coin). Must include 4-digit PIN verification step before final submit."
+    },
+    "mlm_tree": {
+      "design": "Use a hierarchical node tree visual (connected with CSS borders). Highlight Direct Referrals in blue, Auto Placements in orange. Include a 'Cycle Progress' bar at the top (e.g., Cycle 2 of 10) using Shadcn Progress component."
+    },
+    "transaction_history": {
+      "design": "Data-dense table with Date, Type, Amount, Status. Use red/green colors for amount. Include simple Shadcn Selects for filtering by Type and Date."
+    }
+  },
+  "accessibility": {
+    "contrast": "Ensure all text on colored wallet cards has minimum 4.5:1 contrast. Use pure white text on emerald and slate cards.",
+    "testing": "All key CTAs and forms must have data-testid attributes (e.g., data-testid='recharge-submit-btn', data-testid='pin-input')."
+  },
+  "instructions_to_main_agent": [
+    "Install and use @phosphor-icons/react",
+    "Use framer-motion for smooth page transitions and card entrances.",
+    "Follow 'The Control Room' grid pattern for dashboard metrics.",
+    "Do NOT use HTML select/date inputs; use Shadcn Select/Calendar.",
+    "Implement the Dual Wallet distinct styling to avoid user errors.",
+    "Ensure the MLM Tree is responsive; use a horizontal scroll container if needed for deep nodes.",
+    "Require 4-digit PIN for ALL financial transactions (Recharge, Transfer)."
+  ]
+}
