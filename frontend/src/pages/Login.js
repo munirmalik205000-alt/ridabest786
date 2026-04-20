@@ -26,14 +26,25 @@ const Login = () => {
     if (mobile.length !== 10) return toast.error('Mobile number must be exactly 10 digits');
     if (!password) return toast.error('Password required');
     setIsLoading(true);
-    const result = await login(mobile, password);
+    const querySnapshot = await getDocs(collection(db, "users"));
+
+let found = false;
+
+querySnapshot.forEach((doc) => {
+  const data = doc.data();
+
+  if (data.mobile === mobile && data.password === password) {
+    found = true;
+  }
+});
+
+if (found) {
+  toast.success('Login successful ✅');
+  navigate('/dashboard');
+} else {
+  toast.error('Wrong mobile or password ❌');
+}
     setIsLoading(false);
-    if (result.success) {
-      toast.success('Welcome back!');
-      navigate('/dashboard');
-    } else {
-      toast.error(result.error || 'Login failed');
-    }
   };
 
   return (
