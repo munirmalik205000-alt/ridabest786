@@ -21,138 +21,126 @@ const Login = () => {
     setMobile(e.target.value.replace(/\D/g, '').slice(0, 10));
   };
 
+  // ✅ FIXED LOGIN
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (mobile.length !== 10) return toast.error('Mobile number must be exactly 10 digits');
-    if (!password) return toast.error('Password required');
+
+    if (mobile.length !== 10) {
+      return toast.error('Mobile number must be exactly 10 digits');
+    }
+
+    if (!password) {
+      return toast.error('Password required');
+    }
+
     setIsLoading(true);
-    const querySnapshot = await getDocs(collection(db, "users"));
 
-let found = false;
+    try {
+      const querySnapshot = await getDocs(collection(db, "users"));
 
-querySnapshot.forEach((doc) => {
-  const data = doc.data();
+      let foundUser = null;
 
-  if (data.mobile === mobile && data.password === password) {
-    found = true;
-  }
-});
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
 
-if (found) {
-  toast.success('Login successful ✅');
-  navigate('/dashboard');
-} else {
-  toast.error('Wrong mobile or password ❌');
-}
+        if (data.mobile === mobile && data.password === password) {
+          foundUser = data;
+        }
+      });
+
+      if (foundUser) {
+        // 🔥 IMPORTANT: user save करना
+        localStorage.setItem("user", JSON.stringify(foundUser));
+
+        toast.success('Login successful ✅');
+        navigate('/dashboard');
+      } else {
+        toast.error('Wrong mobile or password ❌');
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Login failed");
+    }
+
     setIsLoading(false);
   };
 
   return (
     <div className="min-h-screen bg-brand-gradient-soft flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
-      {/* Animated blobs for depth */}
-      <div className="pointer-events-none absolute -top-32 -left-32 w-96 h-96 rounded-full blur-3xl opacity-40"
-        style={{ background: 'radial-gradient(circle, hsl(243 85% 65%), transparent 70%)' }} />
-      <div className="pointer-events-none absolute -bottom-32 -right-32 w-96 h-96 rounded-full blur-3xl opacity-40"
-        style={{ background: 'radial-gradient(circle, hsl(158 70% 55%), transparent 70%)' }} />
-      <div className="pointer-events-none absolute top-1/3 -right-24 w-72 h-72 rounded-full blur-3xl opacity-30"
-        style={{ background: 'radial-gradient(circle, hsl(270 85% 65%), transparent 70%)' }} />
-
-      <div className="absolute top-4 right-4"><ThemeToggle /></div>
+      
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
         className="relative w-full max-w-md"
       >
-        <div className="flex flex-col items-center mb-6 sm:mb-8">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-brand-gradient flex items-center justify-center shadow-lg shadow-primary/30 mb-3">
-            <Lightning size={28} weight="fill" className="text-white sm:size-8" />
+        <div className="flex flex-col items-center mb-6">
+          <div className="w-16 h-16 rounded-2xl bg-brand-gradient flex items-center justify-center shadow-lg mb-3">
+            <Lightning size={28} className="text-white" />
           </div>
-          <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">
-            Rida<span className="text-brand-gradient">786</span>
-          </h1>
-          <p className="text-muted-foreground text-xs sm:text-sm mt-1">Recharge · Bills · Wallet · Invest</p>
+          <h1 className="text-2xl font-bold">Rida786</h1>
         </div>
 
-        <div className="surface-glass rounded-3xl p-5 sm:p-8 shadow-xl" data-testid="login-card">
-          <h2 className="text-xl sm:text-2xl font-bold">Welcome back 👋</h2>
-          <p className="text-muted-foreground text-sm mt-1">Log in to manage your money</p>
+        <div className="surface-glass rounded-3xl p-6 shadow-xl">
+          <h2 className="text-xl font-bold">Welcome back 👋</h2>
 
-          <form onSubmit={handleSubmit} className="mt-5 sm:mt-6 space-y-4">
+          <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+
             <div>
-              <Label htmlFor="mobile" className="text-sm font-semibold">Mobile Number</Label>
-              <div className="relative mt-1.5">
-                <Phone size={18} weight="duotone" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-primary" />
+              <Label>Mobile Number</Label>
+              <div className="relative">
+                <Phone size={18} className="absolute left-3 top-3" />
                 <Input
-                  id="mobile"
                   type="tel"
-                  inputMode="numeric"
-                  placeholder="Enter 10-digit mobile"
                   value={mobile}
                   onChange={handleMobileChange}
-                  className="pl-10 pr-14 h-12 rounded-xl bg-muted/60"
-                  required
+                  className="pl-10"
                   maxLength={10}
-                  data-testid="login-mobile-input"
                 />
-                {mobile.length > 0 && (
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-mono text-muted-foreground">{mobile.length}/10</span>
-                )}
               </div>
             </div>
 
             <div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-sm font-semibold">Password</Label>
-                <Link to="/forgot-password" className="text-xs text-primary hover:underline font-semibold" data-testid="forgot-password-link">
-                  Forgot?
-                </Link>
-              </div>
-              <div className="relative mt-1.5">
-                <Lock size={18} weight="duotone" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-primary" />
+              <Label>Password</Label>
+              <div className="relative">
+                <Lock size={18} className="absolute left-3 top-3" />
                 <Input
-                  id="password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 pr-11 h-12 rounded-xl bg-muted/60"
-                  required
-                  data-testid="login-password-input"
+                  className="pl-10"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  data-testid="toggle-password-btn"
+                  className="absolute right-3 top-3"
                 >
-                  {showPassword ? <EyeSlash size={20} weight="duotone" /> : <Eye size={20} weight="duotone" />}
+                  {showPassword ? <EyeSlash size={20} /> : <Eye size={20} />}
                 </button>
               </div>
             </div>
 
-            <Button
-              type="submit"
-              className="btn-brand w-full h-12 rounded-xl font-bold text-white"
-              disabled={isLoading}
-              data-testid="login-submit-btn"
-            >
-              {isLoading ? 'Logging in...' : (<span className="flex items-center justify-center gap-2">Log in <ArrowRight size={18} weight="bold" /></span>)}
+            <Button type="submit" disabled={isLoading} className="w-full">
+              {isLoading ? 'Logging in...' : (
+                <span className="flex items-center justify-center gap-2">
+                  Log in <ArrowRight size={18} />
+                </span>
+              )}
             </Button>
           </form>
 
-          <div className="mt-5 sm:mt-6 text-center text-sm text-muted-foreground">
-            Don't have an account?{' '}
-            <Link to="/register" className="text-primary hover:underline font-bold" data-testid="register-link">
-              Sign Up Free
-            </Link>
+          <div className="mt-4 text-center">
+            <Link to="/register">Create account</Link>
           </div>
         </div>
 
-        <p className="flex items-center justify-center gap-1.5 text-center text-[11px] sm:text-xs text-muted-foreground mt-5 sm:mt-6">
-          <ShieldCheck size={14} weight="duotone" className="text-primary" />
-          Bank-grade encryption · RBI-compliant withdrawals
+        <p className="text-center text-xs mt-4 flex items-center justify-center gap-1">
+          <ShieldCheck size={14} />
+          Secure login
         </p>
       </motion.div>
     </div>
