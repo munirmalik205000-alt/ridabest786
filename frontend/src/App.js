@@ -27,7 +27,15 @@ import './App.css';
 const hideNavPaths = ['/login', '/register', '/forgot-password', '/setup-pin', '/admin'];
 
 function AppLayout({ children }) {
-  const user = JSON.parse(localStorage.getItem("user")); // 🔥 Firebase user
+
+  // 🔥 SAFE USER (CRASH FIX)
+  let user = null;
+  try {
+    user = JSON.parse(localStorage.getItem("user"));
+  } catch {
+    user = null;
+  }
+
   const location = useLocation();
 
   const hide = hideNavPaths.some((p) => location.pathname.startsWith(p));
@@ -35,7 +43,10 @@ function AppLayout({ children }) {
 
   return (
     <>
-      <div className={showNav ? 'pb-20 md:pb-0' : ''}>{children}</div>
+      <div className={showNav ? 'pb-20 md:pb-0' : ''}>
+        {children}
+      </div>
+
       {showNav && <BottomNav />}
     </>
   );
@@ -47,6 +58,7 @@ function App() {
       <BrowserRouter>
 
         <AppLayout>
+
           <Routes>
 
             <Route path="/" element={<Navigate to="/login" replace />} />
@@ -80,6 +92,7 @@ function App() {
             <Route path="/withdrawals" element={<ProtectedRoute><Withdrawals /></ProtectedRoute>} />
 
           </Routes>
+
         </AppLayout>
 
         <Toaster position="top-center" richColors />
