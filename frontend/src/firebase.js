@@ -1,9 +1,7 @@
-// src/firebase.js
-
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"; // ✅ ADD
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyC4h42NYJHBghS8nQN16rdhvAjhkLHNLXA",
   authDomain: "ridabest786.firebaseapp.com",
@@ -14,10 +12,9 @@ const firebaseConfig = {
   measurementId: "G-N9JB780920"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// 🔥 IMPORTANT (login ke liye)
 export const auth = getAuth(app);
+export const db = getFirestore(app); // ✅ MOST IMPORTANT
 
 export default app;
