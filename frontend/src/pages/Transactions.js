@@ -5,9 +5,8 @@ import { Card } from '../components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { Input } from '../components/ui/input';
 import { ArrowLeft, DownloadSimple } from '@phosphor-icons/react';
-import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
+const API_URL = "";
 
 const Transactions = () => {
   const navigate = useNavigate();
@@ -32,10 +31,17 @@ useEffect(() => {
       if (fromDate) params.append('from_date', fromDate);
       if (toDate) params.append('to_date', toDate);
 
-      const url = `${API_URL}/api/transactions?${params.toString()}`;
 
-      const { data } = await axios.get(url, { withCredentials: true });
-      setTransactions(data?.transactions || []);
+      setTransactions([
+  {
+    _id: "1",
+    type: "credit",
+    amount: 100,
+    status: "success",
+    description: "Test transaction",
+    created_at: new Date()
+  }
+]);
     } catch (error) {
       console.error('Failed to fetch transactions:', error);
     } finally {
