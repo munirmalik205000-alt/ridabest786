@@ -6,7 +6,7 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // ✅ LOGIN (Firebase)
   const login = async (mobile, password) => {
@@ -37,8 +37,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error(error);
       return { success: false, error: "Login failed" };
-    }
-  };
+    };   // line ~40
 
   // ✅ REGISTER (Firebase)
   const register = async (name, mobile, password, referral_code) => {
