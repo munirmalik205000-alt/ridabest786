@@ -4,7 +4,8 @@ import { initializeApp } from "firebase/app";
 // Services
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getAnalytics } from "firebase/analytics";
+
+// ❌ analytics hata diya (important)
 
 // Config
 const firebaseConfig = {
@@ -24,7 +25,5 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// Optional
-const analytics = getAnalytics(app);
-
+// export
 export default app;
