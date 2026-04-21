@@ -1,16 +1,12 @@
-// Import Firebase core
 import { initializeApp } from "firebase/app";
-
-// Services
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
-// ❌ analytics hata diya (important)
-
-// Config
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyC4h42NYJHBghS8nQN16rdhvAjhkLHNLXA",
   authDomain: "ridabest786.firebaseapp.com",
+  databaseURL: "https://ridabest786-default-rtdb.firebaseio.com",
   projectId: "ridabest786",
   storageBucket: "ridabest786.firebasestorage.app",
   messagingSenderId: "805181900398",
@@ -18,12 +14,11 @@ const firebaseConfig = {
   measurementId: "G-N9JB780920"
 };
 
-// Initialize
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Services init
+// ✅ Auth & DB export karo
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-// export
 export default app;
