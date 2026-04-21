@@ -1,8 +1,10 @@
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 
-import { collection, getDocs, query, where, addDoc } from "firebase/firestore";
-import { db } from "../firebase";
-import React, { createContext, useState, useContext } from "react";
+const AuthContext = createContext(null);
 
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+const TOKEN_KEY = 'smartpay360_token';
 
 // Axios defaults: send cookies + attach Authorization header if token stored
 axios.defaults.withCredentials = true;
