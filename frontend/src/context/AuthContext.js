@@ -60,9 +60,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../firebase";
-
 const login = async (mobile, password) => {
   try {
     const q = query(
