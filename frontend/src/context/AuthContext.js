@@ -34,11 +34,11 @@ export const AuthProvider = ({ children }) => {
         return { success: false, error: "Wrong password" };
       }
 
-    } catch (error) {
-      console.error(error);
-      return { success: false, error: "Login failed" };
-    };   // line ~40
-
+  } catch (error) {
+  console.error(error);
+  return { success: false, error: "Login failed" };
+};
+}; // ✅ YE ADD KARNA HAI (line ~41)
   // ✅ REGISTER (Firebase)
   const register = async (name, mobile, password, referral_code) => {
     try {
