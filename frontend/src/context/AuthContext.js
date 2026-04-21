@@ -1,6 +1,5 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../firebase";
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext(null);
 
