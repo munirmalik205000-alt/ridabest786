@@ -58,21 +58,39 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (mobile, password) => {
-    try {
-      const { data } = await axios.post(
-        `${API_URL}/api/auth/login`,
-        { mobile, password }
-      );
-      if (data.access_token) {
-        storeToken(data.access_token);
-        setAuthHeader(data.access_token);
-      }
-      setUser(data);
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: formatApiErrorDetail(error.response?.data?.detail) || error.message };
+  import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebase";
+
+const login = async (mobile, password) => {
+  try {
+    const q = query(
+      collection(db, "users"),
+      where("mobile", "==", mobile.toString().trim())
+    );
+
+    const snapshot = await getDocs(q);
+
+    if (snapshot.empty) {
+      return { success: false, error: "User not found" };
     }
+
+    let userData = null;
+    snapshot.forEach((doc) => {
+      userData = doc.data();
+    });
+
+    if (userData.password === password.toString().trim()) {
+      setUser(userData);
+      return { success: true };
+    } else {
+      return { success: false, error: "Wrong password" };
+    }
+
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Login failed" };
+  }
+};
   };
 
   const register = async (name, mobile, password, referral_code) => {
