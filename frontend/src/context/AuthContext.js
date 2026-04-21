@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-
+import { db } from "../firebase";
 const AuthContext = createContext(null);
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
@@ -58,22 +58,40 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (mobile, password) => {
-    try {
-      const { data } = await axios.post(
-        `${API_URL}/api/auth/login`,
-        { mobile, password }
-      );
-      if (data.access_token) {
-        storeToken(data.access_token);
-        setAuthHeader(data.access_token);
-      }
-      setUser(data);
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: formatApiErrorDetail(error.response?.data?.detail) || error.message };
+  import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebase";
+
+const login = async (mobile, password) => {
+  try {
+    const q = query(
+      collection(db, "users"),
+      where("mobile", "==", mobile)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return { success: false, error: "User not found" };
     }
-  };
+
+    let userData = null;
+
+    querySnapshot.forEach((doc) => {
+      userData = doc.data();
+    });
+
+    if (userData.password === password) {
+      setUser(userData);
+      return { success: true };
+    } else {
+      return { success: false, error: "Wrong password" };
+    }
+
+  } catch (error) {
+    console.error(error);
+    return { success: false, error: "Login error" };
+  }
+};
 
   const register = async (name, mobile, password, referral_code) => {
     try {
