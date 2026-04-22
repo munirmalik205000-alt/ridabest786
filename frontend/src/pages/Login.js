@@ -73,18 +73,49 @@ const Login = () => {
               <Label htmlFor="mobile" className="text-sm font-semibold">Mobile Number</Label>
               <div className="relative mt-1.5">
                 <Phone size={18} weight="duotone" className="absolute left-3.5 top-1/2 -translate-y-1/2 text-primary" />
-                <Input
-                  id="mobile"
-                  type="tel"
-                  inputMode="numeric"
-                  placeholder="Enter 10-digit mobile"
-                  value={mobile}
-                  onChange={handleMobileChange}
-                  className="pl-10 pr-14 h-12 rounded-xl bg-muted/60"
-                  required
-                  maxLength={10}
-                  data-testid="login-mobile-input"
-                />
+                import React, { useState } from "react";
+
+function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    // Email validation (letters + numbers allowed)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+      alert("Invalid email format");
+      return;
+    }
+
+    console.log("Email:", email);
+    console.log("Password:", password);
+  };
+
+  return (
+    <form onSubmit={handleLogin}>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+
+      <button type="submit">Login</button>
+    </form>
+  );
+}
+
+export default Login;
                 {mobile.length > 0 && (
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-mono text-muted-foreground">{mobile.length}/10</span>
                 )}
