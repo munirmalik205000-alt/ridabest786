@@ -1,111 +1,50 @@
-import React, { createContext, useState, useEffect } from "react";
-import axios from "axios";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-    return {
-      success: true,
-      user: userCredential.user
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error.message
-    };
-  }
-};
-
 const AuthContext = createContext(null);
 
-const API_URL = process.env.REACT_APP_BACKEND_URL;
-const TOKEN_KEY = 'smartpay360_token';
-
-// Axios defaults: send cookies + attach Authorization header if token stored
-axios.defaults.withCredentials = true;
-
-function setAuthHeader(token) {
-  if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  } else {
-    delete axios.defaults.headers.common['Authorization'];
-  }
-}
-
-function getStoredToken() {
-  try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
-}
-function storeToken(token) {
-  try { if (token) localStorage.setItem(TOKEN_KEY, token); else localStorage.removeItem(TOKEN_KEY); } catch {}
-}
-
-// Initialize header on module load so requests fired before mount still authenticate
-setAuthHeader(getStoredToken());
-
-function formatApiErrorDetail(detail) {
-  if (detail == null) return "Something went wrong. Please try again.";
-  if (typeof detail === "string") return detail;
-  if (Array.isArray(detail))
-    return detail.map((e) => (e && typeof e.msg === "string" ? e.msg : JSON.stringify(e))).filter(Boolean).join(" ");
-  if (detail && typeof detail.msg === "string") return detail.msg;
-  return String(detail);
-}
-
-export const login = async (email, password) => {
+// ✅ LOGIN FUNCTION (Firebase)
+const login = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
     return {
       success: true,
-      user: userCredential.user
+      user: userCredential.user,
     };
   } catch (error) {
     return {
       success: false,
-      error: error.message
+      error: error.message,
     };
   }
 };
+
+// ✅ PROVIDER
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  setLoading(false);
-}, []);
+    // simple init (no backend call)
+    setLoading(false);
+  }, []);
 
-  
-  const register = async (name, mobile, password, referral_code) => {
-    try {
-      const { data } = await axios.post(
-        `${API_URL}/api/auth/register`,
-        { name, mobile, password, referral_code }
-      );
-      if (data.access_token) {
-        storeToken(data.access_token);
-        setAuthHeader(data.access_token);
-      }
-      setUser(data);
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: formatApiErrorDetail(error.response?.data?.detail) || error.message };
-    }
+  // ✅ SAFE REGISTER (backend nahi hai)
+  const register = async () => {
+    return { success: false, error: "Backend not connected" };
   };
 
+  // ✅ SAFE LOGOUT
   const logout = async () => {
-    try {
-      await axios.post(`${API_URL}/api/auth/logout`, {});
-    } catch (error) {
-      // ignore
-    }
-    storeToken(null);
-    setAuthHeader(null);
-    setUser(false);
+    setUser(null);
+    return true;
   };
 
+  // ✅ SAFE REFRESH
   const refreshUser = async () => {
-    await checkAuth();
+    return true;
   };
 
   return (
@@ -115,10 +54,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// ✅ HOOK
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
-  }
-  return context;
+  return useContext(AuthContext);
 };
