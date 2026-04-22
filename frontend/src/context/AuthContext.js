@@ -1,5 +1,10 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
 import { auth } from "../firebase";
 
 const AuthContext = createContext({
@@ -11,60 +16,88 @@ const AuthContext = createContext({
   refreshUser: async () => {},
 });
 
-// ✅ LOGIN FUNCTION
-const login = async (email, password) => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-    return {
-      success: true,
-      user: userCredential.user,
-    };
-  } catch (error) {
-    return {
-      success: false,
-      error: error.message,
-    };
-  }
-};
-
-// ✅ PROVIDER
+// ================= PROVIDER =================
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Auto check login
   useEffect(() => {
-    setLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const handleLogin = async (email, password) => {
-    const res = await login(email, password);
-    if (res.success) setUser(res.user);
-    return res;
+  // ================= LOGIN =================
+  const login = async (email, password) => {
+    try {
+      const res = await signInWithEmailAndPassword(auth, email, password);
+
+      return {
+        success: true,
+        user: res.user,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
   };
 
+  // ================= REGISTER =================
+  const register = async (email, password) => {
+    try {
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+
+      return {
+        success: true,
+        user: res.user,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  };
+
+  // ================= LOGOUT =================
   const logout = async () => {
-    setUser(null);
+    try {
+      await signOut(auth);
+      setUser(null);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const register = async () => {
-    return { success: false, error: "Backend not connected" };
-  };
-
+  // ================= REFRESH =================
   const refreshUser = async () => {
-    return true;
+    const currentUser = auth.currentUser;
+    setUser(currentUser);
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, login: handleLogin, register, logout, refreshUser }}
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        logout,
+        refreshUser,
+      }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
 
-// ✅ HOOK
+// ================= HOOK =================
 export const useAuth = () => {
   return useContext(AuthContext);
 };
