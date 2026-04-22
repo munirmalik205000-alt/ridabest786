@@ -62,18 +62,7 @@ export const AuthProvider = ({ children }) => {
   setLoading(false);
 }, []);
 
-  const checkAuth = async () => {
-    try {
-      const { data } = await axios.get(`${API_URL}/api/auth/me`);
-      setUser(data);
-    } catch (error) {
-      setUser(false);
-      storeToken(null);
-      setAuthHeader(null);
-    } finally {
-      setLoading(false);
-    }
-  };
+  
 
   const login = async (mobile, password) => {
     try {
