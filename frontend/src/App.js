@@ -27,18 +27,26 @@ import './App.css';
 const hideNavPaths = ['/login', '/register', '/forgot-password', '/setup-pin', '/admin'];
 
 function AppLayout({ children }) {
-  const { user } = useAuth();
+  const auth = useAuth();   // SAFE
+  const user = auth?.user;  // SAFE
+
   const location = useLocation();
-  const hide = hideNavPaths.some((p) => location.pathname.startsWith(p));
-  const showNav = !!user && !hide;
+
+  const hide = hideNavPaths.some((p) =>
+    location.pathname.startsWith(p)
+  );
+
+  const showNav = user && !hide;
+
   return (
     <>
-      <div className={showNav ? 'pb-20 md:pb-0' : ''}>{children}</div>
+      <div className={showNav ? "pb-20 md:pb-0" : ""}>
+        {children}
+      </div>
       {showNav && <BottomNav />}
     </>
   );
 }
-
 function App() {
   return (
     <ThemeProvider>
