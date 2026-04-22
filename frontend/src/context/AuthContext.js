@@ -1,111 +1,123 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
-import { auth } from "../firebase";
+import React, { createContext, useState, useEffect, useContext } from 'react';
+import axios from 'axios';
 
-// ================= CONTEXT =================
-const AuthContext = createContext({
-  user: null,
-  loading: true,
-  login: async () => ({ success: false }),
-  register: async () => ({ success: false }),
-  logout: async () => {},
-  refreshUser: async () => {},
-});
+const AuthContext = createContext(null);
 
-// ================= PROVIDER =================
+const API_URL = process.env.REACT_APP_BACKEND_URL;
+const TOKEN_KEY = 'smartpay360_token';
+
+// Axios defaults: send cookies + attach Authorization header if token stored
+axios.defaults.withCredentials = true;
+
+function setAuthHeader(token) {
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete axios.defaults.headers.common['Authorization'];
+  }
+}
+
+function getStoredToken() {
+  try { return localStorage.getItem(TOKEN_KEY); } catch { return null; }
+}
+function storeToken(token) {
+  try { if (token) localStorage.setItem(TOKEN_KEY, token); else localStorage.removeItem(TOKEN_KEY); } catch {}
+}
+
+// Initialize header on module load so requests fired before mount still authenticate
+setAuthHeader(getStoredToken());
+
+function formatApiErrorDetail(detail) {
+  if (detail == null) return "Something went wrong. Please try again.";
+  if (typeof detail === "string") return detail;
+  if (Array.isArray(detail))
+    return detail.map((e) => (e && typeof e.msg === "string" ? e.msg : JSON.stringify(e))).filter(Boolean).join(" ");
+  if (detail && typeof detail.msg === "string") return detail.msg;
+  return String(detail);
+}
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔥 Auto login detect (VERY IMPORTANT)
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser || null);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
+    checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ================= LOGIN =================
-  const login = async (email, password) => {
+  const checkAuth = async () => {
     try {
-      const res = await signInWithEmailAndPassword(auth, email, password);
-
-      return {
-        success: true,
-        user: res.user,
-      };
+      const { data } = await axios.get(`${API_URL}/api/auth/me`);
+      setUser(data);
     } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-      };
+      setUser(false);
+      storeToken(null);
+      setAuthHeader(null);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // ================= REGISTER =================
-  const register = async (email, password) => {
+  const login = async (mobile, password) => {
     try {
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-
-      return {
-        success: true,
-        user: res.user,
-      };
+      const { data } = await axios.post(
+        `${API_URL}/api/auth/login`,
+        { mobile, password }
+      );
+      if (data.access_token) {
+        storeToken(data.access_token);
+        setAuthHeader(data.access_token);
+      }
+      setUser(data);
+      return { success: true };
     } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-      };
+      return { success: false, error: formatApiErrorDetail(error.response?.data?.detail) || error.message };
     }
   };
 
-  // ================= LOGOUT =================
+  const register = async (name, mobile, password, referral_code) => {
+    try {
+      const { data } = await axios.post(
+        `${API_URL}/api/auth/register`,
+        { name, mobile, password, referral_code }
+      );
+      if (data.access_token) {
+        storeToken(data.access_token);
+        setAuthHeader(data.access_token);
+      }
+      setUser(data);
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: formatApiErrorDetail(error.response?.data?.detail) || error.message };
+    }
+  };
+
   const logout = async () => {
     try {
-      await signOut(auth);
-      setUser(null);
+      await axios.post(`${API_URL}/api/auth/logout`, {});
     } catch (error) {
-      console.error("Logout error:", error);
+      // ignore
     }
+    storeToken(null);
+    setAuthHeader(null);
+    setUser(false);
   };
 
-  // ================= REFRESH =================
   const refreshUser = async () => {
-    const currentUser = auth.currentUser;
-    setUser(currentUser || null);
+    await checkAuth();
   };
 
-  // ================= RETURN =================
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loading,
-        login,
-        register,
-        logout,
-        refreshUser,
-      }}
-    >
+    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// ================= HOOK =================
 export const useAuth = () => {
   const context = useContext(AuthContext);
-
   if (!context) {
-    throw new Error("useAuth must be used within AuthProvider");
+    throw new Error('useAuth must be used within AuthProvider');
   }
-
   return context;
 };
