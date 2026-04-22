@@ -1,8 +1,9 @@
+
 from dotenv import load_dotenv
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
+load_dotenv(ROOT_DIR / ".env")
 
 from fastapi import FastAPI, APIRouter, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
@@ -22,7 +23,7 @@ import uuid
 import base64
 from collections import deque
 
-# ✅ app सबसे पहले define करो
+# ✅ app सबसे पहले define
 app = FastAPI()
 
 # ✅ home route
@@ -37,9 +38,11 @@ db_name = os.environ.get("DB_NAME")
 # ✅ database connect
 client = AsyncIOMotorClient(mongo_url)
 db = client[db_name]
-app = FastAPI()
-api_router = APIRouter(prefix="/api")
 
+# ❌ यहाँ दुबारा app = FastAPI() नहीं होना चाहिए
+
+# ✅ router
+api_router = APIRouter(prefix="/api")
 # Setup uploads directory
 UPLOAD_DIR = ROOT_DIR / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
