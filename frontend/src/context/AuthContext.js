@@ -2,9 +2,16 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 
-const AuthContext = createContext(null);
+const AuthContext = createContext({
+  user: null,
+  loading: true,
+  login: async () => ({ success: false }),
+  register: async () => ({ success: false }),
+  logout: async () => {},
+  refreshUser: async () => {},
+});
 
-// ✅ LOGIN FUNCTION (Firebase)
+// ✅ LOGIN FUNCTION
 const login = async (email, password) => {
   try {
     const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -27,28 +34,31 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // simple init (no backend call)
     setLoading(false);
   }, []);
 
-  // ✅ SAFE REGISTER (backend nahi hai)
+  const handleLogin = async (email, password) => {
+    const res = await login(email, password);
+    if (res.success) setUser(res.user);
+    return res;
+  };
+
+  const logout = async () => {
+    setUser(null);
+  };
+
   const register = async () => {
     return { success: false, error: "Backend not connected" };
   };
 
-  // ✅ SAFE LOGOUT
-  const logout = async () => {
-    setUser(null);
-    return true;
-  };
-
-  // ✅ SAFE REFRESH
   const refreshUser = async () => {
     return true;
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshUser }}>
+    <AuthContext.Provider
+      value={{ user, loading, login: handleLogin, register, logout, refreshUser }}
+    >
       {children}
     </AuthContext.Provider>
   );
