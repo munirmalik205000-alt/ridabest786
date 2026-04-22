@@ -21,9 +21,13 @@ import random
 import uuid
 import base64
 from collections import deque
+from fastapi import FastAPI
+
+app = FastAPI()
+
 @app.get("/")
 def home():
-    return {"message": "Backend running ✅"}
+    return {"message": "Backend running"}
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
