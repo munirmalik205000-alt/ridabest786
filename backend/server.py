@@ -23,12 +23,12 @@ import base64
 from collections import deque
 from fastapi import FastAPI
 
-app = FastAPI()
 
 @app.get("/")
 def home():
     return {"message": "Backend running"}
-mongo_url = os.environ['MONGO_URL']
+    
+db_name = os.environ.get('DB_NAME')
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
