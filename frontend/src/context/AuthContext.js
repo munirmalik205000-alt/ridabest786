@@ -7,6 +7,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../firebase";
 
+// ================= CONTEXT =================
 const AuthContext = createContext({
   user: null,
   loading: true,
@@ -21,10 +22,10 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Auto check login
+  // 🔥 Auto login detect (VERY IMPORTANT)
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+      setUser(currentUser || null);
       setLoading(false);
     });
 
@@ -71,16 +72,17 @@ export const AuthProvider = ({ children }) => {
       await signOut(auth);
       setUser(null);
     } catch (error) {
-      console.error(error);
+      console.error("Logout error:", error);
     }
   };
 
   // ================= REFRESH =================
   const refreshUser = async () => {
     const currentUser = auth.currentUser;
-    setUser(currentUser);
+    setUser(currentUser || null);
   };
 
+  // ================= RETURN =================
   return (
     <AuthContext.Provider
       value={{
@@ -99,5 +101,11 @@ export const AuthProvider = ({ children }) => {
 
 // ================= HOOK =================
 export const useAuth = () => {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+
+  if (!context) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+
+  return context;
 };
