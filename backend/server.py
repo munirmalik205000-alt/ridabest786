@@ -4,7 +4,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
-from fastapi import FastAPI, APIRouter, HTTPException, Request, Response, Depends, UploadFile, File
+from fastapi import FastAPI, APIRouter, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -21,17 +21,22 @@ import random
 import uuid
 import base64
 from collections import deque
-from fastapi import FastAPI
 
+# ✅ app सबसे पहले define करो
+app = FastAPI()
 
+# ✅ home route
 @app.get("/")
 def home():
     return {"message": "Backend running"}
-    
-db_name = os.environ.get('DB_NAME')
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
 
+# ✅ env variables
+mongo_url = os.environ.get("MONGO_URL")
+db_name = os.environ.get("DB_NAME")
+
+# ✅ database connect
+client = AsyncIOMotorClient(mongo_url)
+db = client[db_name]
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
