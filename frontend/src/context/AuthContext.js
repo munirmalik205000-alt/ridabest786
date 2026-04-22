@@ -59,9 +59,8 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    checkAuth();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  setLoading(false);
+}, []);
 
   const checkAuth = async () => {
     try {
