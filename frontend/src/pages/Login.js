@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import ThemeToggle from '../components/ThemeToggle';
 
 const Login = () => {
-  const [email, setEmail] = useState(''); // ✅ mobile → email
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,6 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
@@ -31,7 +30,7 @@ const Login = () => {
     if (!password) return toast.error('Password required');
 
     setIsLoading(true);
-    const result = await login(email, password); // ✅ email pass karo
+    const result = await login(email, password);
     setIsLoading(false);
 
     if (result.success) {
@@ -45,13 +44,16 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-brand-gradient-soft flex items-center justify-center p-4 sm:p-6 relative overflow-hidden">
 
-      <div className="absolute top-4 right-4"><ThemeToggle /></div>
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="relative w-full max-w-md"
       >
+        {/* Logo */}
         <div className="flex flex-col items-center mb-6">
           <div className="w-16 h-16 rounded-2xl bg-brand-gradient flex items-center justify-center mb-3">
             <Lightning size={28} weight="fill" className="text-white" />
@@ -61,12 +63,13 @@ const Login = () => {
           </h1>
         </div>
 
+        {/* Card */}
         <div className="surface-glass rounded-3xl p-6 shadow-xl">
           <h2 className="text-xl font-bold">Welcome back</h2>
 
           <form onSubmit={handleSubmit} className="mt-6 space-y-4">
 
-            {/* ✅ EMAIL INPUT */}
+            {/* Email */}
             <div>
               <Label>Email</Label>
               <Input
@@ -79,7 +82,7 @@ const Login = () => {
               />
             </div>
 
-            {/* PASSWORD */}
+            {/* Password */}
             <div>
               <Label>Password</Label>
               <div className="relative mt-1.5">
@@ -102,11 +105,18 @@ const Login = () => {
               </div>
             </div>
 
+            {/* Button */}
             <Button type="submit" className="w-full h-12 rounded-xl" disabled={isLoading}>
-              {isLoading ? 'Logging in...' : 'Login'}
+              {isLoading ? 'Logging in...' : (
+                <span className="flex items-center justify-center gap-2">
+                  Login <ArrowRight size={18} />
+                </span>
+              )}
             </Button>
+
           </form>
 
+          {/* Register */}
           <div className="mt-5 text-center text-sm">
             <Link to="/register" className="text-primary font-bold">
               Create Account
@@ -114,10 +124,12 @@ const Login = () => {
           </div>
         </div>
 
+        {/* Footer */}
         <p className="text-center text-xs mt-5 flex justify-center gap-1">
           <ShieldCheck size={14} />
           Secure Login
         </p>
+
       </motion.div>
     </div>
   );
