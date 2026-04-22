@@ -1,30 +1,25 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-const ProtectedRoute = ({ children, requirePin = false, adminOnly = false }) => {
+const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
+  // ✅ loading screen
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-slate-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
       </div>
     );
   }
 
+  // ❌ agar user nahi hai → login
   if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  if (adminOnly && user.role !== 'admin') {
-    return <Navigate to="/dashboard" replace />;
-  }
-
-  if (requirePin && !user.has_pin) {
-    return <Navigate to="/setup-pin" replace />;
-  }
-
+  // ✅ user hai → allow
   return children;
 };
 
