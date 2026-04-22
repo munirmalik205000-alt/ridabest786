@@ -21,7 +21,9 @@ import random
 import uuid
 import base64
 from collections import deque
-
+@app.get("/")
+def home():
+    return {"message": "Backend running ✅"}
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
