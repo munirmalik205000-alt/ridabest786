@@ -54,6 +54,21 @@ function formatApiErrorDetail(detail) {
   return String(detail);
 }
 
+export const login = async (email, password) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+    return {
+      success: true,
+      user: userCredential.user
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+};
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -63,24 +78,6 @@ export const AuthProvider = ({ children }) => {
 }, []);
 
   
-
-  const login = async (mobile, password) => {
-    try {
-      const { data } = await axios.post(
-        `${API_URL}/api/auth/login`,
-        { mobile, password }
-      );
-      if (data.access_token) {
-        storeToken(data.access_token);
-        setAuthHeader(data.access_token);
-      }
-      setUser(data);
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: formatApiErrorDetail(error.response?.data?.detail) || error.message };
-    }
-  };
-
   const register = async (name, mobile, password, referral_code) => {
     try {
       const { data } = await axios.post(
